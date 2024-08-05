@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block page_name %}New Run{% endblock %}
+{% block banner %}Log Run{% endblock %}
+{% block head %}
+<script src="{{ url_for('static', filename='js/run-form.js') }}" defer></script>
+{% endblock %}
+{% block content %}
+<div class="grid">
+  <div id="loading-container" class="s12">
+    <progress></progress>
+  </div>
+  <div id="content-container" class="s8 opacity">
+    <form class="margin">
+      <div class="field label suffix border">
+
+        <select id="route">
+        </select>
+        <label>Route</label>
+        <i>arrow_drop_down</i>
+      </div>
+      <div id="split-times">
+
+      </div>
+      <button class="no-margin">Save Run</button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}
