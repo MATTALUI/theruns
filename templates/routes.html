@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block page_name %}Routes{% endblock %}
+{% block banner %}Routes{% endblock %}
+{% block head %}
+<script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
+{% endblock %}
+{% block content %}
+<p>routes.html</p>
+{{ request.path }}
+{% endblock %}

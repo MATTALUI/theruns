@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/beercss@3.6.12/dist/cdn/beer.min.css" rel="stylesheet">
+
+  <script type="module" src="https://cdn.jsdelivr.net/npm/beercss@3.6.12/dist/cdn/beer.min.js"></script>
+
+  <script type="module" src="https://cdn.jsdelivr.net/npm/material-dynamic-colors@1.1.2/dist/cdn/material-dynamic-colors.min.js"></script>
+  <title>The Runs | {% block page_name %}{% endblock %}</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  {% block head %}{% endblock %}
+</head>
+
+<body class="dark">
+  <nav class="m l left primary">
+    <header>
+      <a href="/">
+        <img class="circle" src="{{ url_for('static', filename='images/logo.png') }}">
+      </a>
+    </header>
+    <a href="/" class="{{ 'active' if request.path == '/' else '' }}">
+      <i>home</i>
+      <span>Home</span>
+    </a>
+    <a href="/runs" class="{{ 'active' if request.path.startswith('/runs') else '' }}">
+      <i>steps</i>
+      <span>Runs</span>
+    </a>
+    <a href="/routes" class="{{ 'active' if request.path.startswith('/routes') else '' }}">
+      <i>route</i>
+      <span>Routes</span>
+    </a>
+    <a href="/insights" class="{{ 'active' if request.path.startswith('/insights') else '' }}">
+      <i>query_stats</i>
+      <span>Insights</span>
+    </a>
+    <a href="/settings" class="{{ 'active' if request.path.startswith('/settings') else '' }}">
+      <i>settings</i>
+      <span>Settings</span>
+    </a>
+    <a href="/help" class="{{ 'active' if request.path.startswith('/help') else '' }}">
+      <i>help</i>
+      <span>Help</span>
+    </a>
+  </nav>
+  <header class="primary-container">
+    <nav>
+      <h1 class="max center-align">{% block banner %}{% endblock %}</h1>
+    </nav>
+  </header>
+  <main class="responsive">
+    {% block content %}{% endblock %}
+  </main>
+  <footer>
+    <span>©<a href="https://mattalui.io">MATTALUI.IO</a>, All Rights Reserved. 2024 </span>
+  </footer>
+</body>
+
+</html>

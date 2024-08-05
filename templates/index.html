@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block banner %}Home{% endblock %}
+{% block page_name %}Home{% endblock %}
+{% block head %}
+<script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
+{% endblock %}
+{% block content %}
+<div class="grid">
+  <div class="s6">
+
+    <div class="row margin">
+      <h2 class="max">Recent Runs</h2>
+      <a href="/runs/new">
+        <button class="extra">
+          <i>add_circle</i>
+          <span>Log New Run</span>
+        </button>
+      </a>
+    </div>
+
+    {% for run in runs[:5] %}
+    <a href="/runs/{{'id'}}" class="row padding surface-container wave margin-vertical">
+      <button class="circle">{{run["distance"]}}</button>
+      <div class="max">
+        <h6 class="small">{{run["route_name"]}}</h6>
+        <div>{{format_run_date(run["date"])}}</div>
+      </div>
+      <label>{{format_run_time(run["time"])}}</label>
+    </a>
+    {% endfor %}
+    {% if runs|length > 5 %}
+    <div class="row margin">
+      <a href="/runs" class="responsive">
+        <button class="responsive fill small no-margin">See All ({{ runs | length }})</button>
+      </a>
+    </div>
+    {% endif %}
+
+
+
+
+
+  </div>
+  <div class="s6">
+    <div class="row margin">
+      <h2 class="max">Common Routes</h2>
+    </div>
+
+
+    {% for route in common_routes %}
+    <article class="no-padding border round">
+      <img class="responsive small top-round" src="{{ url_for('static', filename='images/logo.png') }}">
+      <div class="padding">
+        <h5>{{route["name"]}}</h5>
+        <p></p>
+        <nav>
+          <a href="/routes/{{ route['name'].replace(' ', '-') }}">
+            <button class="no-margin">Details</button>
+          </a>
+        </nav>
+      </div>
+    </article>
+    {% endfor %}
+
+
+  </div>
+</div>
+{% endblock %}
