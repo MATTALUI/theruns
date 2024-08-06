@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import json
 import utils
 
@@ -16,33 +16,52 @@ def root():
         format_run_time=utils.format_run_time,
     )
 
-@app.route("/runs")
+@app.route("/runs", methods=["GET"])
 def runs_index():
     return render_template("runs.html")
 
-@app.route("/runs/new")
+@app.route("/runs/new", methods=["GET"])
 def runs_new():
     return render_template(
         "run-form.html"
     )
 
-@app.route("/routes")
+@app.route("/runs/<run_id>", methods=["GET"])
+def runs_show(run_id):
+    return render_template("runs.html")
+
+@app.route("/routes", methods=["GET"])
 def routes_index():
     return render_template("routes.html")
 
-@app.route("/insights")
+@app.route("/routes/<route_name>", methods=["GET"])
+def routes_show(route_name):
+    return render_template("routes.html")
+
+@app.route("/insights", methods=["GET"])
 def insights_index():
     return render_template("insights.html")
 
-@app.route("/settings")
+@app.route("/settings", methods=["GET"])
 def settings_index():
     return render_template("settings.html")
 
-@app.route("/help")
+@app.route("/help", methods=["GET"])
 def help_index():
     return render_template("help.html")
+
+
 
 
 @app.route("/api/routes", methods=["GET"])
 def get_routes():
     return json.dumps(data["routes"])
+
+@app.route("/api/runs", methods=["POST"])
+def create_run():
+    global data
+    run_data = request.get_json()
+    final_row = utils.append_run(run_data.get("route_name"), run_data.get("row"))
+    data = utils.build_data()
+
+    return json.dumps(final_row)

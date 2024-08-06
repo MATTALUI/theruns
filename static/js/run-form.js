@@ -20,9 +20,42 @@
     routeSelect.appendChild(option)
   });
 
-  runForm.addEventListener("submit", (e) => {
+  const parseTimeSeconds = (timeString) => {
+    const regex = /^(\d{0,2}:)?(\d{0,2}:)?(\d{0,2}(\.\d*)?)?$/gi;
+    if (!regex.test(timeString))
+      throw new Error("inputted string does not match regex expectation: " + timeString);
+    let seconds = 0;
+    const sections = timeString.split(":").reverse();
+    seconds += Math.round(parseFloat(sections[0] || 0));
+    seconds += Math.round(parseFloat(sections[1] || 0)) * 60;
+    seconds += Math.round(parseFloat(sections[2] || 0)) * 60 * 60;
+    if (isNaN(seconds))
+      throw new Error("inputted string produces NaN: " + timeString);
+    return seconds
+  }
+
+  runForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    console.log("submitting form");
+    const row = Array.from(contentContainer.querySelectorAll("input"))
+      .reduce((r, input) => {
+        r[input.name] = parseTimeSeconds(input.value);
+
+        return r;
+      }, {})
+    const payload = {
+      route_name: routeSelect.value,
+      row,
+    };
+    loadingContainer.classList.remove("opacity");
+    contentContainer.classList.add("opacity");
+    const req = await fetch("/api/runs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    window.location.pathname ="/runs";
   });
 
 
@@ -40,7 +73,8 @@
       container.classList.add("border");
 
       input.type = "text";
-      input.name = route.col_name;
+      input.name = split.col_name;
+      input.required = "true";
 
       label.innerHTML = split.name;
 

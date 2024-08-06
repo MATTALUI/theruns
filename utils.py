@@ -3,6 +3,7 @@ import os
 import glob
 import pandas as pd
 import datetime
+import uuid
 
 def build_data():
     data = {}
@@ -108,3 +109,15 @@ def format_run_time(time):
     m = str(complete_minutes).zfill(2)
     s = str(time).zfill(2)
     return f"{h}:{m}:{s}"
+
+def append_run(route_name, split_row):
+    frame_path = f"./data/runroutes/{route_name}.csv"
+    frame = pd.read_csv(frame_path)
+    new_row = { **split_row }
+    new_row[ConstantRunColumns.DATE] = datetime.datetime.now().strftime("%m/%d/%Y")
+    new_row[ConstantRunColumns.ID] = str(uuid.uuid4())
+    frame = pd.concat([frame, pd.DataFrame([new_row])])
+    frame.to_csv(frame_path, index=False)
+
+    return new_row
+    
