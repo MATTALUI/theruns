@@ -19,7 +19,7 @@
     </div>
 
     {% for run in runs[:5] %}
-    <a href="/runs/{{'id'}}" class="row padding surface-container wave margin-vertical">
+    <a href="/runs/{{ run['id'] }}" class="row padding surface-container wave margin-vertical">
       <button class="circle">{{run["distance"]}}</button>
       <div class="max">
         <h6 class="small">{{run["route_name"]}}</h6>

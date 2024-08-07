@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import json
 import utils
+import reports
 
 app = Flask(__name__)
 
@@ -18,7 +19,12 @@ def root():
 
 @app.route("/runs", methods=["GET"])
 def runs_index():
-    return render_template("runs.html")
+    return render_template(
+        "runs.html",
+        runs=data["runs"],
+        format_run_date=utils.format_run_date,
+        format_run_time=utils.format_run_time,
+    )
 
 @app.route("/runs/new", methods=["GET"])
 def runs_new():
@@ -51,8 +57,9 @@ def help_index():
     return render_template("help.html")
 
 
-
-
+################################################################################
+# API ROUTES
+################################################################################
 @app.route("/api/routes", methods=["GET"])
 def get_routes():
     return json.dumps(data["routes"])
@@ -63,5 +70,22 @@ def create_run():
     run_data = request.get_json()
     final_row = utils.append_run(run_data.get("route_name"), run_data.get("row"))
     data = utils.build_data()
-
     return json.dumps(final_row)
+
+@app.route("/api/reports/runs-pace")
+def report_run_splits():
+    report = {}
+    run_id = request.args.get("run_id")
+    report["type"] = "runs-splits"
+    report["run_id"] = run_id
+    reports.generate_run_pace_report(report)
+    return json.dumps(report)
+
+@app.route("/api/reports/runs-overview")
+def report_run_overview():
+    report = {}
+    run_id = request.args.get("run_id")
+    report["type"] = "runs-overview"
+    report["run_id"] = run_id
+    report["src"] = "https://picsum.photos/300/200"
+    return json.dumps(report)

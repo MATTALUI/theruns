@@ -2,9 +2,19 @@
 {% block banner %}Insights{% endblock %}
 {% block page_name %}Insights{% endblock %}
 {% block head %}
-<script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
+<!-- <script src="{{ url_for('static', filename='js/index.js') }}" defer></script> -->
 {% endblock %}
 {% block content %}
-<p>insights.html</p>
-{{ request.path }}
+<div>
+  <div class="tabs left-align">
+    <a data-ui="#stats" class="active">Stats</a>
+    <a data-ui="#reports">Reports</a>
+  </div>
+  <div id="stats" class="page padding active">
+    <h5>Stats</h5>
+  </div>
+  <div id="reports" class="page padding">
+    <h5>Reports</h5>
+  </div>
+</div>
 {% endblock %}

@@ -2,9 +2,49 @@
 {% block page_name %}Runs{% endblock %}
 {% block banner %}Runs{% endblock %}
 {% block head %}
-<script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/runs.js') }}" defer></script>
 {% endblock %}
 {% block content %}
-<p>runs.html</p>
-{{ request.path }}
+<div class="grid">
+  <div class="s12">
+    {% for run in runs %}
+    <details data-id="{{ run['id'] }}">
+      <summary class="none">
+        <a class="row padding surface-container wave margin-vertical">
+          <button class="circle">{{run["distance"]}}</button>
+          <div class="max">
+            <h6 class="small">{{run["route_name"]}}</h6>
+            <div>{{format_run_date(run["date"])}}</div>
+          </div>
+          <label>{{format_run_time(run["time"])}}</label>
+        </a>
+      </summary>
+      <article class="margin secondary-container">
+        <div class="row margin">
+          <h3 class="max">
+            {{ run['route_name'] }}
+          </h3>
+          <a href="/runs/{{ run['id'] }}">
+            <button class="responsive round primary small">Details</button>
+          </a>
+        </div>
+        <div class="">
+
+        </div>
+        <div class="grid">
+          <div class="s6 center-align split-container">
+            <progress class="circle small"></progress>
+
+          </div>
+          <div class="s6 center-align overview-container">
+            <progress class="circle small"></progress>
+
+          </div>
+        </div>
+      </article>
+    </details>
+    {% endfor %}
+  </div>
+
+</div>
 {% endblock %}

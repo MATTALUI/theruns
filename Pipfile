@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 pandas = "*"
 flask = "*"
+seaborn = "*"
 
 [dev-packages]
 

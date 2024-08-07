@@ -1,2 +1,4 @@
 data/runroutes/*.csv
 data/routepics/*.png
+static/images/reports/*.png
+__pycache__

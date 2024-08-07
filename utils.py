@@ -44,6 +44,7 @@ def add_runs_data(data):
             run["route_name"] = route["name"]
             run["distance"] = "{:.1f}".format(distance)
             run["date"] = row[ConstantRunColumns.DATE]
+            run["id"] = row[ConstantRunColumns.ID]
             run["time"] = time
 
     runs = sorted(runs, key=sort_by_date_string)
@@ -61,31 +62,31 @@ def add_common_routes(data):
         common_routes.append(([r for r in data["routes"] if r.get("name")==route[0]][0]))
     data["common_routes"] = common_routes
 
+def parse_split_title(split_title, df=None):
+    [raw_number, raw_distance, raw_name] = split_title.split("@")
+    fastest = None
+    slowest = None
+    average = None
+
+    if df is not None and len(df) > 0:
+        fastest = int(df[split_title].min())
+        slowest = int(df[split_title].max())
+        average = int(df[split_title].mean())
+
+    return {
+        "number": int(raw_number),
+        "name": raw_name.replace("_", " "),
+        "distance": float(raw_distance),
+        "col_name": split_title,
+        "fastest": fastest,
+        "slowest": slowest,
+        "average": average,
+    }
 
 def parse_splits(df):
-    def parse_split_title(split_title):
-        [raw_number, raw_distance, raw_name] = split_title.split("@")
-        fastest = None
-        slowest = None
-        average = None
-
-        if len(df) > 0:
-            fastest = int(df[split_title].min())
-            slowest = int(df[split_title].max())
-            average = int(df[split_title].mean())
-
-        return {
-            "number": int(raw_number),
-            "name": raw_name.replace("_", " "),
-            "distance": float(raw_distance),
-            "col_name": split_title,
-            "fastest": fastest,
-            "slowest": slowest,
-            "average": average,
-        }
     relevant_columns = list(set(df.columns) - set(ConstantRunColumns.ALL_COLUMNS))
     relevant_columns = relevant_columns
-    splits = [parse_split_title(col) for col in relevant_columns]
+    splits = [parse_split_title(col, df) for col in relevant_columns]
 
     return splits
 
@@ -105,9 +106,9 @@ def format_run_time(time):
     time -= seconds_in_an_hour * complete_hours
     complete_minutes = time // seconds_in_a_minute
     time -= seconds_in_a_minute * complete_minutes
-    h = str(complete_hours).zfill(2)
-    m = str(complete_minutes).zfill(2)
-    s = str(time).zfill(2)
+    h = str(int(complete_hours)).zfill(2)
+    m = str(int(complete_minutes)).zfill(2)
+    s = str(int(round(time))).zfill(2)
     return f"{h}:{m}:{s}"
 
 def append_run(route_name, split_row):
