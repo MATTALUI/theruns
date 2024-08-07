@@ -36,7 +36,6 @@ def generate_run_pace_report(report):
             "Pace": pace
         })
     pace_frame = pd.DataFrame(paces)
-    print(pace_frame.head())
     mp.pyplot.switch_backend('Agg')
     sns.set_theme(style="darkgrid")
     ax = sns.lineplot(
