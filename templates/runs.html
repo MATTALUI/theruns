@@ -5,6 +5,15 @@
 <script src="{{ url_for('static', filename='js/runs.js') }}" defer></script>
 {% endblock %}
 {% block content %}
+<div class="row margin">
+  <h2 class="max"></h2>
+  <a href="/runs/new">
+    <button class="extra">
+      <i>add_circle</i>
+      <span>Log New Run</span>
+    </button>
+  </a>
+</div>
 <div class="grid">
   <div class="s12">
     {% for run in runs %}
@@ -24,9 +33,24 @@
           <h3 class="max">
             {{ run['route_name'] }}
           </h3>
-          <a href="/runs/{{ run['id'] }}">
-            <button class="responsive round primary small">Details</button>
-          </a>
+          <nav class="no-space">
+            <a href="/runs/{{ run['id'] }}">
+              <button class="border left-round max large no-margin">
+                <!-- <i class="small">check</i> -->
+                <span>Details</span>
+              </button>
+            </a>
+            <!-- <button class="border no-round max large">
+              <i class="small">check</i>
+              <span>Button</span>
+            </button> -->
+            <a href="/insights/runs/{{ run['id'] }}">
+              <button class="border right-round max large no-margin">
+                <!-- <i class="small">check</i> -->
+                <span>Insights</span>
+              </button>
+            </a>
+          </nav>
         </div>
         <div class="">
 

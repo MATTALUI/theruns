@@ -12,8 +12,8 @@ def generate_run_pace_report(report):
     run_id = report.get("run_id")
     target_pace_src = f"./static/images/reports/run-pace-{run_id}.png"
     report["src"] = target_pace_src[1:]
-    # if os.path.exists(target_pace_src):
-    #     return
+    if os.path.exists(target_pace_src):
+        return
     route_paths = glob.glob("./data/runroutes/*.csv")
     run_row = None
 
@@ -44,6 +44,46 @@ def generate_run_pace_report(report):
         y="Pace",
     )
     ax.set_title("Split Paces")
-    ax.yaxis.set_major_formatter(lambda v,s: utils.format_run_time(v))
+    ax.yaxis.set_major_formatter(lambda v,_: utils.format_run_time(v))
     ax.figure.savefig(target_pace_src)
+    plt.close()
+
+def generate_run_overview_report(report):
+    run_id = report.get("run_id")
+    target_overview_src = f"./static/images/reports/run-overview-{run_id}.png"
+    report["src"] = target_overview_src[1:]
+    if os.path.exists(target_overview_src):
+        return
+    route_paths = glob.glob("./data/runroutes/*.csv")
+    run_row = None
+
+    for route_path in route_paths:
+        frame = pd.read_csv(route_path)
+        frame = frame[frame[ConstantRunColumns.ID] == run_id]
+        if len(frame) == 1:
+            run_row = frame.drop(ConstantRunColumns.ALL_COLUMNS, axis=1).values.tolist()[0]
+            break
+
+    times = []
+    total = 0
+    for i in range(len(run_row)):
+        split_name = frame.columns.tolist()[i]
+        split_data = utils.parse_split_title(split_name)
+        seconds = run_row[i]
+        total += seconds
+        times.append({
+            "Split Number": split_data["number"],
+            "Time": total
+        })
+    time_frame = pd.DataFrame(times)
+    mp.pyplot.switch_backend('Agg')
+    sns.set_theme(style="darkgrid")
+    ax = sns.lineplot(
+        data=time_frame,
+        x="Split Number",
+        y="Time",
+    )
+    ax.set_title("Overall Time")
+    ax.yaxis.set_major_formatter(lambda v,_: utils.format_run_time(v))
+    ax.figure.savefig(target_overview_src)
     plt.close()

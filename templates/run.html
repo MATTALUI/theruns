@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block page_name %}Run{% endblock %}
+{% block banner %}Run{% endblock %}
+{% block head %}
+<!-- <script src="{{ url_for('static', filename='js/runs.js') }}" defer></script> -->
+{% endblock %}
+{% block content %}
+<div class="row margin">
+  <h2 class="max">
+    {{ route_name }}
+  </h2>
+  <h4>
+    {{ format_run_date(date) }}
+  </h4>
+</div>
+<div class="grid margin">
+  <div class="s6">
+    <table class="stripes">
+      <thead>
+        <tr>
+          <th>Split</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for split in splits %}
+        <tr>
+          <td>{{ split["number"] }} — {{ split["name"] }}</td>
+          <td>{{ format_run_time(split["time"]) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+        </tr>
+      </tfoot>
+    </table>
+
+  </div>
+  <div class="s6">
+
+  </div>
+
+</div>
+{% endblock %}

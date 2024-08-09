@@ -11,7 +11,33 @@
     <a data-ui="#reports">Reports</a>
   </div>
   <div id="stats" class="page padding active">
-    <h5>Stats</h5>
+    <table class="stripes">
+      <thead>
+        <tr>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for (key, value) in stats %}
+        <tr>
+          <td>
+            {{ key }}
+          </td>
+          <td>
+            {{ value }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th></th>
+        </tr>
+      </tfoot>
+    </table>
+
   </div>
   <div id="reports" class="page padding">
     <h5>Reports</h5>

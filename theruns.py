@@ -34,11 +34,20 @@ def runs_new():
 
 @app.route("/runs/<run_id>", methods=["GET"])
 def runs_show(run_id):
-    return render_template("runs.html")
+    run_info = utils.build_run_show_data(data, run_id)
+    return render_template(
+        "run.html",
+        format_run_date=utils.format_run_date,
+        format_run_time=utils.format_run_time,
+        **run_info,
+    )
 
 @app.route("/routes", methods=["GET"])
 def routes_index():
-    return render_template("routes.html")
+    return render_template(
+        "routes.html",
+        routes=data["routes"],
+    )
 
 @app.route("/routes/<route_name>", methods=["GET"])
 def routes_show(route_name):
@@ -46,7 +55,17 @@ def routes_show(route_name):
 
 @app.route("/insights", methods=["GET"])
 def insights_index():
-    return render_template("insights.html")
+    return render_template(
+        "insights.html",
+        stats=data["general_stats"],
+    )
+
+@app.route("/insights/runs/<run_id>", methods=["GET"])
+def insights_run_show(run_id):
+    return render_template(
+        "insights.html",
+        stats=data["general_stats"],
+    )
 
 @app.route("/settings", methods=["GET"])
 def settings_index():
@@ -87,5 +106,5 @@ def report_run_overview():
     run_id = request.args.get("run_id")
     report["type"] = "runs-overview"
     report["run_id"] = run_id
-    report["src"] = "https://picsum.photos/300/200"
+    reports.generate_run_overview_report(report)
     return json.dumps(report)

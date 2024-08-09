@@ -5,6 +5,30 @@
 <script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
 {% endblock %}
 {% block content %}
-<p>routes.html</p>
-{{ request.path }}
+<div class="grid margin">
+  {% for route in routes %}
+  <div class="s6">
+    <article class="no-padding">
+      <div class="grid no-space">
+        <div class="s6">
+          <img class="responsive" src="{{ url_for('static', filename='images/logo.png') }}">
+        </div>
+        <div class="s6">
+          <div class="padding">
+            <h5>
+              {{ route['name'] }}
+            </h5>
+            <p></p>
+            <nav>
+              <a href="/routes/{{ route['name'].replace(' ', '-') }}">
+                <button class="border round no-margin">Details</button>
+              </a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+  {% endfor %}
+</div>
 {% endblock %}

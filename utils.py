@@ -7,11 +7,23 @@ import uuid
 
 def build_data():
     data = {}
+    add_frame_hash(data)
     add_routes_data(data)
     add_runs_data(data)
     add_common_routes(data)
+    add_general_stats(data)
 
     return data
+
+def add_frame_hash(data):
+    frames = {}
+    data["frames"] = frames
+    route_paths = glob.glob("./data/runroutes/*.csv")
+
+    for route_path in route_paths:
+        route_name = os.path.splitext(os.path.basename(route_path))[0]
+        frame = pd.read_csv(route_path)
+        frames[route_name] = frame
 
 def add_routes_data(data):
     route_paths = glob.glob("./data/runroutes/*.csv")
@@ -121,4 +133,38 @@ def append_run(route_name, split_row):
     frame.to_csv(frame_path, index=False)
 
     return new_row
+
+def build_run_show_data(data, run_id):
+    route_frame = None
+    route_name = None
+    for name in data["frames"].keys():
+        frame = data["frames"][name]
+        frame = frame[frame[ConstantRunColumns.ID] == run_id]
+        if len(frame) == 1:
+            route_name = name
+            route_frame = frame
+            break
+    splits = []
+    split_names = route_frame.drop(ConstantRunColumns.ALL_COLUMNS, axis=1).columns.tolist()
+    split_times = route_frame.drop(ConstantRunColumns.ALL_COLUMNS, axis=1).values.tolist()[0]
+    for i in range(len(split_names)):
+        splits.append({
+            "time": split_times[i],
+            **parse_split_title(split_names[i]),
+        })
+
+    return {
+        "route_name": route_name,
+        "date": route_frame[ConstantRunColumns.DATE].values.tolist()[0],
+        "splits": splits,
+    }
     
+def add_general_stats(data):
+    stats = []
+    data["general_stats"] = stats
+
+    unique_routes = 0
+    for frame in data["frames"].values():
+        if len(frame) > 0:
+            unique_routes += 1
+    stats.append(("Unique Routes Run", unique_routes))
